@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- List View -->
+        <record id="view_legal_regulation_list" model="ir.ui.view">
+            <field name="name">legal.regulation.list</field>
+            <field name="model">legal.regulation</field>
+            <field name="arch" type="xml">
+                <list string="Peraturan Hukum" decoration-success="status=='berlaku'" decoration-danger="status=='dicabut'" decoration-warning="status=='diubah'">
+                    <field name="tipe_dokumen"/>
+                    <field name="bentuk_singkat"/>
+                    <field name="nomor"/>
+                    <field name="tahun"/>
+                    <field name="judul"/>
+                    <field name="tanggal_penetapan"/>
+                    <field name="status"/>
+                    <field name="bidang"/>
+                    <field name="is_berlaku_aktif" invisible="1"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="view_legal_regulation_form" model="ir.ui.view">
+            <field name="name">legal.regulation.form</field>
+            <field name="model">legal.regulation</field>
+            <field name="arch" type="xml">
+                <form string="Peraturan Hukum">
+                    <header>
+                        <field name="status" widget="statusbar" statusbar_visible="berlaku,diubah,dicabut"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
+                        
+                        <div class="oe_title">
+                            <h1>
+                                <field name="judul" placeholder="Judul Peraturan..."/>
+                            </h1>
+                            <h2>
+                                <field name="nama_lengkap" readonly="1"/>
+                            </h2>
+                        </div>
+                        
+                        <group>
+                            <group string="Informasi Dasar">
+                                <field name="tipe_dokumen"/>
+                                <field name="bentuk"/>
+                                <field name="bentuk_singkat"/>
+                                <field name="nomor"/>
+                                <field name="tahun"/>
+                            </group>
+                            <group string="Penerbitan">
+                                <field name="teu" string="Badan/Pengarang (T.E.U)"/>
+                                <field name="tempat_penetapan" string="Tempat Penetapan"/>
+                                <field name="tanggal_penetapan"/>
+                                <field name="tanggal_pengundangan"/>
+                                <field name="tanggal_berlaku"/>
+                            </group>
+                        </group>
+                        
+                        <group>
+                            <group string="Klasifikasi">
+                                <field name="bidang"/>
+                                <field name="bahasa"/>
+                                <field name="lokasi"/>
+                            </group>
+                            <group string="Status">
+                                <field name="is_berlaku_aktif" readonly="1"/>
+                            </group>
+                        </group>
+                        
+                        <notebook>
+                            <page string="Subjek &amp; Sumber">
+                                <group>
+                                    <field name="subjek" nolabel="1" placeholder="Subjek/topik peraturan..."/>
+                                </group>
+                                <group>
+                                    <field name="sumber" nolabel="1" placeholder="Sumber dokumen (BN, dll)..."/>
+                                </group>
+                            </page>
+                            <page string="Keterangan">
+                                <field name="keterangan" nolabel="1" placeholder="Keterangan tambahan..."/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Search View -->
+        <record id="view_legal_regulation_search" model="ir.ui.view">
+            <field name="name">legal.regulation.search</field>
+            <field name="model">legal.regulation</field>
+            <field name="arch" type="xml">
+                <search string="Cari Peraturan Hukum">
+                    <field name="judul"/>
+                    <field name="nomor"/>
+                    <field name="bentuk_singkat"/>
+                    
+                    <filter string="Berlaku" name="berlaku" domain="[('status', '=', 'berlaku')]"/>
+                    <filter string="Dicabut" name="dicabut" domain="[('status', '=', 'dicabut')]"/>
+                    
+                    <group expand="0" string="Group By">
+                        <filter string="Status" name="group_status" context="{'group_by': 'status'}"/>
+                        <filter string="Tahun" name="group_tahun" context="{'group_by': 'tahun'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Kanban View -->
+        <record id="view_legal_regulation_kanban" model="ir.ui.view">
+            <field name="name">legal.regulation.kanban</field>
+            <field name="model">legal.regulation</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="judul"/>
+                    <field name="bentuk_singkat"/>
+                    <field name="nomor"/>
+                    <field name="tahun"/>
+                    <field name="status"/>
+                    <field name="bidang"/>
+                    <field name="tanggal_penetapan"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_card oe_kanban_global_click">
+                                <div class="row">
+                                    <div class="col-8">
+                                        <strong><t t-esc="record.bentuk_singkat.value"/> No. <t t-esc="record.nomor.value"/>/<t t-esc="record.tahun.value"/></strong>
+                                    </div>
+                                    <div class="col-4 text-right">
+                                        <span t-att-class="'badge badge-' + (record.status.raw_value === 'berlaku' ? 'success' : record.status.raw_value === 'dicabut' ? 'danger' : 'warning')">
+                                            <t t-esc="record.status.value"/>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <t t-esc="record.judul.value"/>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-6">
+                                        <small><i class="fa fa-calendar"/> <t t-esc="record.tanggal_penetapan.value"/></small>
+                                    </div>
+                                    <div class="col-6 text-right">
+                                        <small><t t-esc="record.bidang.value"/></small>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Action Window -->
+        <record id="action_legal_regulation" model="ir.actions.act_window">
+            <field name="name">Peraturan Hukum</field>
+            <field name="res_model">legal.regulation</field>
+            <field name="view_mode">list,kanban,form</field>
+            <field name="context">{'search_default_berlaku': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Buat peraturan hukum pertama Anda
+                </p>
+                <p>
+                    Tambahkan peraturan perundang-undangan, undang-undang, 
+                    peraturan pemerintah, dan dokumen hukum lainnya.
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

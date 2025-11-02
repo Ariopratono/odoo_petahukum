@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- List View -->
+        <record id="view_legal_regulation_list" model="ir.ui.view">
+            <field name="name">legal.regulation.list</field>
+            <field name="model">legal.regulation</field>
+            <field name="arch" type="xml">
+                <list string="Peraturan Hukum">
+                    <field name="bentuk_singkat"/>
+                    <field name="nomor"/>
+                    <field name="tahun"/>
+                    <field name="judul"/>
+                    <field name="status"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="view_legal_regulation_form" model="ir.ui.view">
+            <field name="name">legal.regulation.form</field>
+            <field name="model">legal.regulation</field>
+            <field name="arch" type="xml">
+                <form string="Peraturan Hukum">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="judul" placeholder="Judul Peraturan..."/>
+                            </h1>
+                        </div>
+                        
+                        <group>
+                            <group string="Informasi Dasar">
+                                <field name="tipe_dokumen"/>
+                                <field name="bentuk"/>
+                                <field name="bentuk_singkat"/>
+                                <field name="nomor"/>
+                                <field name="tahun"/>
+                                <field name="status"/>
+                            </group>
+                            <group string="Penerbitan">
+                                <field name="teu"/>
+                                <field name="tempat_penetapan"/>
+                                <field name="tanggal_penetapan"/>
+                                <field name="tanggal_pengundangan"/>
+                                <field name="tanggal_berlaku"/>
+                            </group>
+                        </group>
+                        
+                        <group>
+                            <group string="Detail">
+                                <field name="bidang"/>
+                                <field name="bahasa"/>
+                                <field name="lokasi"/>
+                            </group>
+                        </group>
+                        
+                        <notebook>
+                            <page string="Subjek &amp; Sumber">
+                                <group>
+                                    <field name="subjek" nolabel="1" placeholder="Subjek/topik peraturan..."/>
+                                </group>
+                                <group>
+                                    <field name="sumber" nolabel="1" placeholder="Sumber dokumen (BN, dll)..."/>
+                                </group>
+                            </page>
+                            <page string="Keterangan">
+                                <field name="keterangan" nolabel="1" placeholder="Keterangan tambahan..."/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action Window -->
+        <record id="action_legal_regulation" model="ir.actions.act_window">
+            <field name="name">Peraturan Hukum</field>
+            <field name="res_model">legal.regulation</field>
+            <field name="view_mode">list,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Buat peraturan hukum pertama Anda
+                </p>
+                <p>
+                    Tambahkan peraturan perundang-undangan, undang-undang, 
+                    peraturan pemerintah, dan dokumen hukum lainnya.
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>
